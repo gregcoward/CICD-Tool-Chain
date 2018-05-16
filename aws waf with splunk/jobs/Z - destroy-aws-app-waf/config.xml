@@ -1,0 +1,82 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description></description>
+  <keepDependencies>false</keepDependencies>
+  <properties/>
+  <scm class="hudson.scm.NullSCM"/>
+  <canRoam>true</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers/>
+  <concurrentBuild>false</concurrentBuild>
+  <builders>
+    <hudson.tasks.Shell>
+      <command>cd /home/snops/f5-rs-aws-bigip/ &amp;&amp; ansible-playbook --vault-password-file ~/.vault_pass.txt \
+playbooks/aws_bigip_deploy.yaml -e &quot; \
+deploymentName=98072100 \
+service_name=App1 \
+aws_region=&quot;$(etcdctl get f5-rs-aws-net/98072100/aws_region)&quot; \
+vpc=&quot;$(etcdctl get f5-rs-aws-net/98072100/vpc)&quot; \
+subnets=&quot;$(etcdctl get f5-rs-aws-net/98072100/subnets)&quot; \
+bigipElasticLoadBalancer=&quot;$(etcdctl get f5-rs-aws-external-lb/98072100/bigipElasticLoadBalancer)&quot; \
+applicationPoolTagValue=&quot;$(etcdctl get f5-rs-aws-app/98072100/appAutoscaleGroupName)&quot; \
+state=absent&quot;
+
+cd /home/snops/f5-rs-aws-app/ &amp;&amp; ansible-playbook --vault-password-file ~/.vault_pass.txt \
+playbooks/aws_app_deploy.yaml -e &quot;\
+aws_region=&quot;$(etcdctl get f5-rs-aws-net/98072100/aws_region)&quot; \
+applicationSubnets=&quot;$(etcdctl get f5-rs-aws-net/98072100/applicationSubnets)&quot; \
+deploymentName=98072100 \
+service_name=App1 \ 
+vpc=&quot;$(etcdctl get f5-rs-aws-net/98072100/vpc)&quot; \
+state=absent&quot;
+
+cd /home/snops/f5-rs-aws-external-lb/ &amp;&amp; ansible-playbook --vault-password-file ~/.vault_pass.txt \
+playbooks/aws_external_elb_deploy.yaml -e &quot;\
+deploymentName=98072100 \
+service_name=App1 \
+aws_region=&quot;$(etcdctl get f5-rs-aws-net/98072100/aws_region)&quot; \
+vpc=&quot;$(etcdctl get f5-rs-aws-net/98072100/vpc)&quot; \
+subnets=&quot;$(etcdctl get f5-rs-aws-net/98072100/subnets)&quot; \
+state=absent&quot;
+
+
+cd /home/snops/f5-rs-aws-net/ &amp;&amp; ansible-playbook --vault-password-file ~/.vault_pass.txt \
+playbooks/aws_net_deploy.yaml -e &quot;\
+deploymentName=98072100 \
+aws_region=us-west-2 \
+state=absent&quot;
+
+
+
+</command>
+    </hudson.tasks.Shell>
+  </builders>
+  <publishers>
+    <jenkins.plugins.slack.SlackNotifier plugin="slack@2.3">
+      <baseUrl></baseUrl>
+      <teamDomain></teamDomain>
+      <authToken></authToken>
+      <authTokenCredentialId></authTokenCredentialId>
+      <botUser>false</botUser>
+      <room></room>
+      <startNotification>true</startNotification>
+      <notifySuccess>true</notifySuccess>
+      <notifyAborted>false</notifyAborted>
+      <notifyNotBuilt>false</notifyNotBuilt>
+      <notifyUnstable>false</notifyUnstable>
+      <notifyRegression>false</notifyRegression>
+      <notifyFailure>false</notifyFailure>
+      <notifyBackToNormal>false</notifyBackToNormal>
+      <notifyRepeatedFailure>false</notifyRepeatedFailure>
+      <includeTestSummary>false</includeTestSummary>
+      <includeFailedTests>false</includeFailedTests>
+      <commitInfoChoice>NONE</commitInfoChoice>
+      <includeCustomMessage>true</includeCustomMessage>
+      <customMessage>user: $rs_username , solution: &quot;aws waf with splunk&quot;</customMessage>
+    </jenkins.plugins.slack.SlackNotifier>
+  </publishers>
+  <buildWrappers/>
+</project>

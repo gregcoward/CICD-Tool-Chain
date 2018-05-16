@@ -1,0 +1,14 @@
+{
+    "rgroupName": "sampleApp",
+    "location": "West US",
+    "adminUsername": "adminGuy",
+    "adminPassword": "SuperSecretPassword",
+    "vmSize": "Standard_D2S_V3",
+    "appTemplateURL": "https://raw.githubusercontent.com/tstanley93/Ubuntu-Servers/master/azuredeploy.json",
+    "wafTemplateURL": "https://raw.githubusercontent.com/F5Networks/f5-azure-arm-templates/master/supported/solutions/autoscale/waf/existing_stack/BIGIQ/azuredeploy.json",
+    "instanceType": "Standard_DS4_v2",
+    "bigIqLicenseHost": "8.8.8.8",
+    "bigIqLicenseUsername": "admin",
+    "bigIqLicensePassword": "superSecretPassword",
+    "bigIqLicensePool": "f5_best_pool"
+}

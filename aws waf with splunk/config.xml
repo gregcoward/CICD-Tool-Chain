@@ -1,0 +1,79 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<com.cloudbees.hudson.plugins.folder.Folder plugin="cloudbees-folder@6.4">
+  <actions/>
+  <description></description>
+  <properties>
+    <org.jenkinsci.plugins.pipeline.modeldefinition.config.FolderConfig plugin="pipeline-model-definition@1.2.7">
+      <dockerLabel></dockerLabel>
+      <registry plugin="docker-commons@1.11"/>
+    </org.jenkinsci.plugins.pipeline.modeldefinition.config.FolderConfig>
+  </properties>
+  <folderViews class="com.cloudbees.hudson.plugins.folder.views.DefaultFolderViewHolder">
+    <views>
+      <hudson.model.AllView>
+        <owner class="com.cloudbees.hudson.plugins.folder.Folder" reference="../../../.."/>
+        <name>All</name>
+        <filterExecutors>false</filterExecutors>
+        <filterQueue>false</filterQueue>
+        <properties class="hudson.model.View$PropertyList"/>
+      </hudson.model.AllView>
+      <au.com.centrumsystems.hudson.plugin.buildpipeline.BuildPipelineView plugin="build-pipeline-plugin@1.5.8">
+        <owner class="com.cloudbees.hudson.plugins.folder.Folder" reference="../../../.."/>
+        <name>aws waf stack 01</name>
+        <description>aws stack includes - vpc, app , bigip and waf policy to protect the app</description>
+        <filterExecutors>false</filterExecutors>
+        <filterQueue>false</filterQueue>
+        <properties class="hudson.model.View$PropertyList"/>
+        <gridBuilder class="au.com.centrumsystems.hudson.plugin.buildpipeline.DownstreamProjectGridBuilder">
+          <firstJob>A1 - aws-net-us-west-2</firstJob>
+        </gridBuilder>
+        <noOfDisplayedBuilds>1</noOfDisplayedBuilds>
+        <buildViewTitle></buildViewTitle>
+        <consoleOutputLinkStyle>Lightbox</consoleOutputLinkStyle>
+        <cssUrl></cssUrl>
+        <triggerOnlyLatestJob>false</triggerOnlyLatestJob>
+        <alwaysAllowManualTrigger>false</alwaysAllowManualTrigger>
+        <showPipelineParameters>false</showPipelineParameters>
+        <rowHeaders class="au.com.centrumsystems.hudson.plugin.buildpipeline.extension.SimpleRowHeader"/>
+        <showPipelineParametersInHeaders>false</showPipelineParametersInHeaders>
+        <columnHeaders class="au.com.centrumsystems.hudson.plugin.buildpipeline.extension.NullColumnHeader"/>
+        <buildCard class="au.com.centrumsystems.hudson.plugin.buildpipeline.extension.StandardBuildCard"/>
+        <startsWithParameters>false</startsWithParameters>
+        <refreshFrequency>3</refreshFrequency>
+        <showPipelineDefinitionHeader>false</showPipelineDefinitionHeader>
+      </au.com.centrumsystems.hudson.plugin.buildpipeline.BuildPipelineView>
+      <au.com.centrumsystems.hudson.plugin.buildpipeline.BuildPipelineView plugin="build-pipeline-plugin@1.5.8">
+        <owner class="com.cloudbees.hudson.plugins.folder.Folder" reference="../../../.."/>
+        <name>waf policy</name>
+        <filterExecutors>false</filterExecutors>
+        <filterQueue>false</filterQueue>
+        <properties class="hudson.model.View$PropertyList"/>
+        <gridBuilder class="au.com.centrumsystems.hudson.plugin.buildpipeline.DownstreamProjectGridBuilder">
+          <firstJob>B1 - rs-iapp - WAF policy</firstJob>
+          <firstJobLink>job/aws%20waf%20with%20splunk/job/B1%20-%20rs-iapp%20-%20WAF%20policy/</firstJobLink>
+        </gridBuilder>
+        <noOfDisplayedBuilds>1</noOfDisplayedBuilds>
+        <buildViewTitle></buildViewTitle>
+        <consoleOutputLinkStyle>Lightbox</consoleOutputLinkStyle>
+        <cssUrl></cssUrl>
+        <triggerOnlyLatestJob>false</triggerOnlyLatestJob>
+        <alwaysAllowManualTrigger>false</alwaysAllowManualTrigger>
+        <showPipelineParameters>false</showPipelineParameters>
+        <rowHeaders class="au.com.centrumsystems.hudson.plugin.buildpipeline.extension.SimpleRowHeader"/>
+        <showPipelineParametersInHeaders>false</showPipelineParametersInHeaders>
+        <columnHeaders class="au.com.centrumsystems.hudson.plugin.buildpipeline.extension.NullColumnHeader"/>
+        <buildCard class="au.com.centrumsystems.hudson.plugin.buildpipeline.extension.StandardBuildCard"/>
+        <startsWithParameters>false</startsWithParameters>
+        <refreshFrequency>3</refreshFrequency>
+        <showPipelineDefinitionHeader>false</showPipelineDefinitionHeader>
+      </au.com.centrumsystems.hudson.plugin.buildpipeline.BuildPipelineView>
+    </views>
+    <tabBar class="hudson.views.DefaultViewsTabBar"/>
+  </folderViews>
+  <healthMetrics>
+    <com.cloudbees.hudson.plugins.folder.health.WorstChildHealthMetric>
+      <nonRecursive>false</nonRecursive>
+    </com.cloudbees.hudson.plugins.folder.health.WorstChildHealthMetric>
+  </healthMetrics>
+  <icon class="com.cloudbees.hudson.plugins.folder.icons.StockFolderIcon"/>
+</com.cloudbees.hudson.plugins.folder.Folder>

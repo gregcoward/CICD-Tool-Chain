@@ -1,0 +1,79 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {},
+    "variables": {
+        "container1name": "git-server",
+        "container1image": "tstanley933/tstanley-git-server",
+        "container2name": "f5-rs-container",
+        "container2image": "tstanley933/f5-rs-container"
+    },
+    "resources": [
+        {
+            "name": "git-server-group",
+            "type": "Microsoft.ContainerInstance/containerGroups",
+            "apiVersion": "2018-04-01",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "containers": [
+                    {
+                        "name": "[variables('container1name')]",
+                        "properties": {
+                            "image": "[variables('container1image')]",
+                            "resources": {
+                                "requests": {
+                                    "cpu": 1,
+                                    "memoryInGb": 1.5
+                                }
+                            },
+                            "ports": [
+                                {
+                                    "port": 22
+                                }
+                            ],
+                            "volumeMounts": [
+                                {
+                                    "name": "keys",
+                                    "mountPath": "/git-server/keys"
+                                },
+                                {
+                                    "name": "repos",
+                                    "mountPath": "/git-server/repos"
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "osType": "Linux",
+                "ipAddress": {
+                    "type": "Public",
+                    "ports": [
+                        {
+                            "protocol": "tcp",
+                            "port": "22"
+                        }
+                    ]
+                },
+                "volumes": [
+                    {
+                        "name": "keys",
+                        "azureFile": {
+                            "shareName": "keys",
+                            "storageAccountName": "thomas02",
+                            "storageAccountKey": "27NSK+TILJod5ILApmLw6Us4ZiSy7+l0yHXqC1SCqGmESG3yTu00vCwyiDf7+KQxftPR7hv6ARuNV2Uf/7fnjw=="
+                        }
+                    },
+                    {
+                        "name": "repos",
+                        "azureFile": {
+                            "shareName": "repos",
+                            "storageAccountName": "thomas02",
+                            "storageAccountKey": "27NSK+TILJod5ILApmLw6Us4ZiSy7+l0yHXqC1SCqGmESG3yTu00vCwyiDf7+KQxftPR7hv6ARuNV2Uf/7fnjw=="
+                        }
+                    }
+                ]
+            }
+        }
+    ],
+    "outputs": {}
+}

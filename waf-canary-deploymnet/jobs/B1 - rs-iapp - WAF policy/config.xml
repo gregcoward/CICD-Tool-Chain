@@ -1,0 +1,134 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description></description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <hudson.model.ParametersDefinitionProperty>
+      <parameterDefinitions>
+        <hudson.model.ChoiceParameterDefinition>
+          <name>asm_policy_name</name>
+          <description>linux-high - template policy for linux based apps 
+linux-low -  template policy for linux based apps with less signatures enabled 
+linux-high-bf - Bruteforce policy on login page </description>
+          <choices class="java.util.Arrays$ArrayList">
+            <a class="string-array">
+              <string>linux-high</string>
+              <string>linux-low</string>
+              <string>linux-high-bf</string>
+            </a>
+          </choices>
+        </hudson.model.ChoiceParameterDefinition>
+        <hudson.model.ChoiceParameterDefinition>
+          <name>proactive_bot</name>
+          <description>disabled - no proactive bot defense 
+always - proactive bot defense enabled</description>
+          <choices class="java.util.Arrays$ArrayList">
+            <a class="string-array">
+              <string>disabled</string>
+              <string>always</string>
+            </a>
+          </choices>
+        </hudson.model.ChoiceParameterDefinition>
+        <hudson.model.ChoiceParameterDefinition>
+          <name>asm_policy_name_canary</name>
+          <description>will deploy the chosen parameter to traffic coming from canada.
+after verifying KPI&apos;s you may continue with the deployment to all of the traffic
+verify by accessing the following site:
+main_asm_policy - no canary, all traffic will use the main policy
+linux-high - template policy for linux based apps 
+linux-low -  template policy for linux based apps with less signatures enabled 
+linux-high-bf - Bruteforce policy on login page </description>
+          <choices class="java.util.Arrays$ArrayList">
+            <a class="string-array">
+              <string>main_asm_policy</string>
+              <string>linux-high</string>
+              <string>linux-low</string>
+              <string>linux-high-bf</string>
+            </a>
+          </choices>
+        </hudson.model.ChoiceParameterDefinition>
+        <hudson.model.ChoiceParameterDefinition>
+          <name>dosl7_profile_name_canary</name>
+          <description>will deploy the chosen parameter to traffic coming from canada.
+after verifying KPI&apos;s you may continue with the deployment to all of the traffic
+main_dosl7_policy - no canary, all traffic will use the default profile
+rs_dosl7_profile_canary - name of the canary profile
+</description>
+          <choices class="java.util.Arrays$ArrayList">
+            <a class="string-array">
+              <string>main_dosl7_policy</string>
+              <string>rs_dosl7_profile_canary</string>
+            </a>
+          </choices>
+        </hudson.model.ChoiceParameterDefinition>
+        <hudson.model.ChoiceParameterDefinition>
+          <name>proactive_bot_canary</name>
+          <description>disabled - no proactive bot defense 
+always - proactive bot defense enabled</description>
+          <choices class="java.util.Arrays$ArrayList">
+            <a class="string-array">
+              <string>disabled</string>
+              <string>always</string>
+            </a>
+          </choices>
+        </hudson.model.ChoiceParameterDefinition>
+      </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
+  </properties>
+  <scm class="hudson.scm.NullSCM"/>
+  <canRoam>true</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers/>
+  <concurrentBuild>false</concurrentBuild>
+  <builders>
+    <hudson.tasks.Shell>
+      <command>cd /home/snops/f5-rs-iapp/ &amp;&amp; ansible-playbook --vault-password-file ~/.vault_pass.txt playbooks/waf_policies_demo/waf_policies_demo.yaml -e &quot;\
+deploymentName=98072100 \
+service_name=App1 \
+applicationPoolTagValue=&quot;$(etcdctl get f5-rs-aws-app/98072100/appAutoscaleGroupName)&quot; \
+bigip_ip_addr=&quot;$(etcdctl get f5-rs-aws-tag-master/98072100/master_ip_address)&quot; \
+bigip_mgmt_port=8443 \
+asm_policy_name=${asm_policy_name} \
+dosl7_profile_name_canary=${dosl7_profile_name_canary} \
+asm_policy_name_canary=${asm_policy_name_canary} \
+proactive_bot_canary=${proactive_bot_canary}&quot;</command>
+    </hudson.tasks.Shell>
+  </builders>
+  <publishers>
+    <hudson.tasks.BuildTrigger>
+      <childProjects>B2  - rs-attacks</childProjects>
+      <threshold>
+        <name>SUCCESS</name>
+        <ordinal>0</ordinal>
+        <color>BLUE</color>
+        <completeBuild>true</completeBuild>
+      </threshold>
+    </hudson.tasks.BuildTrigger>
+    <jenkins.plugins.slack.SlackNotifier plugin="slack@2.3">
+      <baseUrl></baseUrl>
+      <teamDomain></teamDomain>
+      <authToken></authToken>
+      <authTokenCredentialId></authTokenCredentialId>
+      <botUser>false</botUser>
+      <room></room>
+      <startNotification>true</startNotification>
+      <notifySuccess>true</notifySuccess>
+      <notifyAborted>false</notifyAborted>
+      <notifyNotBuilt>false</notifyNotBuilt>
+      <notifyUnstable>false</notifyUnstable>
+      <notifyRegression>false</notifyRegression>
+      <notifyFailure>true</notifyFailure>
+      <notifyBackToNormal>false</notifyBackToNormal>
+      <notifyRepeatedFailure>false</notifyRepeatedFailure>
+      <includeTestSummary>false</includeTestSummary>
+      <includeFailedTests>false</includeFailedTests>
+      <commitInfoChoice>NONE</commitInfoChoice>
+      <includeCustomMessage>true</includeCustomMessage>
+      <customMessage>user: $rs_username , solution: &quot;advanced brute force and bot protection canary deployment&quot;</customMessage>
+    </jenkins.plugins.slack.SlackNotifier>
+  </publishers>
+  <buildWrappers/>
+</project>

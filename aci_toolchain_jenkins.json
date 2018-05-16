@@ -1,0 +1,59 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {},
+    "variables": {
+        "container2name": "f5-rs-container",
+        "container2image": "tstanley933/f5-rs-container:latest"
+    },
+    "resources": [
+        {
+            "name": "jenkins-group",
+            "type": "Microsoft.ContainerInstance/containerGroups",
+            "apiVersion": "2018-04-01",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "containers": [
+                    {
+                        "name": "[variables('container2name')]",
+                        "properties": {
+                            "image": "[variables('container2image')]",
+                            "resources": {
+                                "requests": {
+                                    "cpu": 1,
+                                    "memoryInGb": 1.5
+                                }
+                            },
+                            "ports": [
+                                {
+                                    "port": 22
+                                },
+                                {
+                                    "port": 8080
+                                }
+                            ],
+                            "volumeMounts": []
+                        }
+                    }
+                ],
+                "restartPolicy": "OnFailure",
+                "osType": "Linux",
+                "ipAddress": {
+                    "type": "Public",
+                    "ports": [
+                        {
+                            "protocol": "tcp",
+                            "port": "22"
+                        },
+                        {
+                            "protocol": "tcp",
+                            "port": 8080
+                        }
+                    ]
+                },
+                "volumes": []
+            }
+        }
+    ],
+    "outputs": {}
+}
